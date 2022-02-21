@@ -285,15 +285,15 @@ namespace OHOS::Util {
     void Base64::FreeMemory(unsigned char *address)
     {
         if (address != nullptr) {
-            delete[] temp;
-            temp = nullptr;
+            delete[] address;
+            address = nullptr;
         }
     }
     void Base64::FreeMemory(char *address)
     {
         if (address != nullptr) {
-            delete[] temp;
-            temp = nullptr;
+            delete[] address;
+            address = nullptr;
         }
     }
     napi_value Base64::Encode(napi_value src)
@@ -600,8 +600,8 @@ namespace OHOS::Util {
     void FreeMemory(unsigned char *address)
     {
         if (address != nullptr) {
-            delete[] temp;
-            temp = nullptr;
+            delete[] address;
+            address = nullptr;
         }
     }
 }
