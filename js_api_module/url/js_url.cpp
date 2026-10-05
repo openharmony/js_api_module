@@ -15,6 +15,7 @@
 
 #include "js_url.h"
 #include <regex>
+#include <charconv>
 #include <sstream>
 #include "securec.h"
 #include "unicode/stringpiece.h"
@@ -282,13 +283,22 @@ namespace OHOS::Url {
     void AnalysisPort(std::string input, UrlData& urlinfo,
         std::bitset<static_cast<size_t>(BitsetStatusFlag::BIT_STATUS_11)>& flags)
     {
+        if (input.empty()) {
+            flags.set(static_cast<size_t>(BitsetStatusFlag::BIT0));
+            return;
+        }
         for (auto i : input) {
             if (!isdigit(i)) {
                 flags.set(static_cast<size_t>(BitsetStatusFlag::BIT0));
                 return;
             }
         }
-        int it = stoi(input);
+        int it = 0;
+        auto [ptr, ec] = std::from_chars(input.data(), input.data() + input.size(), it);
+        if (ec != std::errc{} || ptr != input.data() + input.size()) {
+            flags.set(static_cast<size_t>(BitsetStatusFlag::BIT0));
+            return;
+        }
         const int maxPort = 65535; // 65535:Maximum port number
         if (it > maxPort) {
             flags.set(static_cast<size_t>(BitsetStatusFlag::BIT0));
